@@ -3,6 +3,7 @@ var player;
 var scoreText;
 var score = 0;
 var platforms;
+var facing = "right";
 
 var playState = {
 
@@ -90,14 +91,28 @@ var playState = {
         player.body.velocity.x = 0;
 
         if (cursors.left.isDown) {
-            player.body.velocity.x = -250;
-            player.animations.play('left');
+            player.body.velocity.x = -350;
+            if (facing != 'left') {
+                player.animations.play('left');
+                facing = 'left';
+            }
         } else if (cursors.right.isDown) {
-            player.body.velocity.x = 250;
-            player.animations.play('right');
+            player.body.velocity.x = 350;
+            if (facing != 'right') {
+                player.animations.play('right');
+                facing = 'right';
+            }
         } else {
-            player.animations.stop();
-            player.frame = 5;
+            if (facing != 'idle') {
+                player.animations.stop();
+
+                if (facing == 'left') {
+                    player.frame = 4;
+                } else {
+                    player.frame = 5;
+                }
+                facing = 'idle';
+            }
         }
 
         if (space.isDown && player.body.touching.down && hitPlatform) {
@@ -106,7 +121,5 @@ var playState = {
         if (space.isDown || !player.body.touching.down) {
             player.animations.stop();
         }
-
     }
-
 };
