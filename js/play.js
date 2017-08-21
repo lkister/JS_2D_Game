@@ -11,7 +11,7 @@ var playState = {
         game.load.spritesheet('player', 'assets/zombie_anim.png', 195, 273);
         game.load.image("ground", "assets/ground.png");
         game.load.image("sky", "assets/sky_wide.png");
-        game.load.image("meat", "assets/meat.png");
+        game.load.image("brain", "assets/brain.png");
         game.load.image("lava", "assets/lava.png");
     },
 
@@ -57,27 +57,27 @@ var playState = {
         lava.scale.setTo(3, 1);
 
 
-        // meat 
-        meats = game.add.group();
-        meats.enableBody = true;
+        // brain 
+        brains = game.add.group();
+        brains.enableBody = true;
 
-        for (var i = 0; i < 11; i++) {
-            var meat = meats.create(i * 70, 0, 'meat');
-            meat.body.gravity.y = 6;
-            meat.body.bounce.y = 0.7 + Math.random() * 0.2;
+        for (var i = 0; i < 50; i++) {
+            var brain = brains.create(i * 90, 0, 'brain');
+            brain.body.gravity.y = 260;
+            brain.body.bounce.y = 0.2 + Math.random() * 0.2;
         }
 
         cursors = game.input.keyboard.createCursorKeys();
         space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-        scoreText = game.add.text(16, 16, 'Meats collected: 0', { fontSize: '32px', fill: '#000' });
+        scoreText = game.add.text(16, 16, 'Brains eaten: 0', { fontSize: '32px', fill: '#000' });
         scoreText.fixedToCamera = true;
     },
 
     update: function() {
-        function collectMeat(player, meat) {
-            meat.kill();
+        function collectbrain(player, brain) {
+            brain.kill();
             score += 1;
-            scoreText.text = 'Score: ' + score;
+            scoreText.text = 'Brains eaten: ' + score;
         }
 
         function restart() {
@@ -85,8 +85,8 @@ var playState = {
         }
 
         var hitPlatform = game.physics.arcade.collide(player, platforms);
-        game.physics.arcade.collide(meats, platforms);
-        game.physics.arcade.overlap(player, meats, collectMeat, null, this);
+        game.physics.arcade.collide(brains, platforms);
+        game.physics.arcade.overlap(player, brains, collectbrain, null, this);
         game.physics.arcade.overlap(player, lavaGround, restart, null, this)
         player.body.velocity.x = 0;
 
