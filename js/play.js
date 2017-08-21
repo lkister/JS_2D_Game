@@ -14,18 +14,17 @@ var playState = {
     },
 
     create: function() {
-
         // fizyka
         game.physics.startSystem(Phaser.Physics.ARCADE);
         // niebo
         game.add.sprite(0, 0, 'sky');
-        // ludek do grania
-        player = game.add.sprite(30, game.world.height - 200, 'player');
+        // zombiak
+        player = game.add.sprite(30, 410, 'player');
         player.frame = 5;
         player.scale.setTo(0.5, 0.5);
         game.physics.arcade.enable(player);
-        player.body.bounce.y = 0.2;
-        player.body.gravity.y = 300;
+        // player.body.bounce.y = 0.5;
+        player.body.gravity.y = 360;
         player.body.collideWorldBounds = true;
         player.animations.add('left', [0, 1, 2, 3], 10, true);
         player.animations.add('right', [6, 7, 8, 9], 10, true);
@@ -36,7 +35,7 @@ var playState = {
         ground.body.immovable = true;
         ground.scale.setTo(2, 2);
         // platformy
-        var ledge = platforms.create(400, 350, 'ground');
+        var ledge = platforms.create(400, 380, 'ground');
         ledge.scale.setTo(0.5, 0.25);
         ledge.body.immovable = true;
         // platforma 2
@@ -55,12 +54,11 @@ var playState = {
         }
 
         cursors = game.input.keyboard.createCursorKeys();
+        space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         scoreText = game.add.text(16, 16, 'Meats collected: 0', { fontSize: '32px', fill: '#000' });
     },
 
     update: function() {
-
-
         function collectMeat(player, meat) {
             meat.kill();
             score += 1;
@@ -82,11 +80,10 @@ var playState = {
             player.frame = 5;
         }
 
-
-        if (cursors.up.isDown && player.body.touching.down && hitPlatform) {
+        if (space.isDown && player.body.touching.down && hitPlatform) {
             player.body.velocity.y = -350;
         }
-        if (cursors.up.isDown || !player.body.touching.down) {
+        if (space.isDown || !player.body.touching.down) {
             player.animations.stop();
         }
 
