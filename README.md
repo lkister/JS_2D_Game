@@ -1,5 +1,5 @@
 # JS_2D_Game
-## Live preview: [LINK]() 
+## Live preview: [LINK](https://lkister.github.io/JS_2D_Game/index.html) 
 
 Technologies used:
 1. ES6
