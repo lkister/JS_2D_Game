@@ -36,23 +36,15 @@ var playState = {
         ledge.scale.setTo(0.25, 0.25);
         ledge.body.immovable = true;
 
-        // meat constructor
+        // meat 
         meats = game.add.group();
-
         meats.enableBody = true;
 
-        //  Here we'll create 12 of them evenly spaced apart
         for (var i = 0; i < 11; i++) {
-            //  Create a star inside of the 'stars' group
             var meat = meats.create(i * 70, 0, 'meat');
-
-            //  Let gravity do its thing
             meat.body.gravity.y = 6;
-
-            //  This just gives each star a slightly random bounce value
             meat.body.bounce.y = 0.7 + Math.random() * 0.2;
         }
-
 
         cursors = game.input.keyboard.createCursorKeys();
     },
@@ -60,10 +52,7 @@ var playState = {
     update: function() {
 
         function collectMeat(player, meat) {
-
-            // Removes the star from the screen
             meat.kill();
-
         }
         var hitPlatform = game.physics.arcade.collide(player, platforms);
         game.physics.arcade.collide(meats, platforms);
@@ -76,13 +65,7 @@ var playState = {
             player.body.velocity.x = 150;
         }
 
-        // if (cursors.down.isDown) {
-        //     player.y += 1;
-        // }
 
-        // if (cursors.up.isDown) {
-        //     player.y -= 1;
-        // }
         if (cursors.up.isDown && player.body.touching.down && hitPlatform) {
             player.body.velocity.y = -350;
         }
