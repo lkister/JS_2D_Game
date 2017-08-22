@@ -10,24 +10,35 @@ var playState = {
     preload: function() {
         game.load.spritesheet('player', 'assets/zombie_anim.png', 195, 273);
         game.load.image("ground", "assets/newGround.png");
-        game.load.image("sky", "assets/background.png");
+        game.load.image("sky", "assets/BG.png");
         game.load.image("brain", "assets/brain.png");
         game.load.image("lava", "assets/lava_new.png");
-        game.load.image("arrowSign", "assets/ArrowSign.png")
-        game.load.image("grave1", "assets/TombStone_1.png")
+        game.load.image("arrowSign", "assets/ArrowSign.png");
+        game.load.image("grave1", "assets/TombStone_1.png");
+        game.load.image("tree", "assets/Tree.png");
     },
 
     create: function() {
         // fizyka
         game.physics.startSystem(Phaser.Physics.ARCADE);
         // niebo
-        background = game.add.tileSprite(0, 0, 800, 600, 'sky');
+        background = game.add.tileSprite(0, 0, 1000, 600, 'sky');
         game.world.setBounds(0, 0, 8000, 600);
         game.camera.follow(background);
         background.fixedToCamera = true;
 
         //arrow sign 
         arrow = game.add.sprite(150, game.world.height - 135, "arrowSign");
+
+        // tree
+        tree = game.add.sprite(550, 195, "tree");
+        tree.scale.setTo(1.5, 1.5);
+        tree = game.add.sprite(2000, 195, "tree");
+        tree.scale.setTo(1.5, 1.5);
+        tree = game.add.sprite(3500, 195, "tree");
+        tree.scale.setTo(1.5, 1.5);
+        tree = game.add.sprite(4200, 195, "tree");
+        tree.scale.setTo(1.5, 1.5);
 
         // zombiak
         player = game.add.sprite(30, 410, 'player');
@@ -61,15 +72,15 @@ var playState = {
         ledge.body.immovable = true;
         // platform 2
         ledge = platforms.create(400, 360, 'ground');
-        ledge.scale.setTo(1, 0.5);
+        ledge.scale.setTo(3, 0.5);
         ledge.body.immovable = true;
         //platform 3
         ledge = platforms.create(1200, 220, 'ground');
-        ledge.scale.setTo(1, 0.5);
+        ledge.scale.setTo(2, 0.5);
         ledge.body.immovable = true;
         // platform 4
         ledge = platforms.create(1800, 220, 'ground');
-        ledge.scale.setTo(1, 0.51);
+        ledge.scale.setTo(3, 0.51);
         ledge.body.immovable = true;
 
         // platform 5
@@ -101,14 +112,13 @@ var playState = {
         }
 
         //tombstone1 
+        tombstone1 = game.add.group();
+        tombstone1.enableBody = true;
         for (var i = 1; i < 20; i++) {
-            tombstone1 = game.add.sprite(i * 1000, game.world.height - 132, "grave1");
-            tombstone1.scale.setTo(1.5, 1.5);
+            var tombstone = tombstone1.create(i * 1000, game.world.height - 132, "grave1");
+            tombstone.body.gravity.y = 100;
+            tombstone.scale.setTo(1.5, 1.5);
         }
-
-
-
-
 
         cursors = game.input.keyboard.createCursorKeys();
         space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -127,11 +137,12 @@ var playState = {
             setTimeout(function() {
                 game.state.start("play")
                 score = 0;
-            }, 2000)
+            }, 1000)
         }
 
         var hitPlatform = game.physics.arcade.collide(player, platforms);
         game.physics.arcade.collide(brains, platforms);
+        game.physics.arcade.collide(tombstone1, platforms);
         game.physics.arcade.overlap(player, brains, collectbrain, null, this);
         game.physics.arcade.overlap(player, lavaGround, restart, null, this)
         player.body.velocity.x = 0;
@@ -164,8 +175,9 @@ var playState = {
         if (space.isDown && player.body.touching.down && hitPlatform) {
             player.body.velocity.y = -370;
         }
-        // if (space.isDown || !player.body.touching.down) {
-        //     player.animations.stop();
-        // }
+        if (!player.body.touching.down && !player.body.velocity.y == 0 && !hitPlatform) {
+            player.animations.stop();
+        }
+
     }
 };
