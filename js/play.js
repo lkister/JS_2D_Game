@@ -104,8 +104,6 @@ var playState = {
         lava.body.immovable = true;
         lava.scale.setTo(8, 1);
 
-
-
         // brains s
         brains = game.add.group();
         brains.enableBody = true;
@@ -138,11 +136,10 @@ var playState = {
         enemy = enemies.create(1100, game.world.height - 191, "enemy");
         enemy.scale.setTo(0.43, 0.43);
         enemy.animations.add('left', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 10, true);
-        // enemy.body.immovable = true;
 
         cursors = game.input.keyboard.createCursorKeys();
         space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-        scoreText = game.add.text(16, 16, 'Brains eaten: 0', { fontSize: '20px', fill: '#ff0000' });
+        scoreText = game.add.text(16, 16, 'Brains eaten: 0', { fontSize: '30px', font: "Creepster", fill: '#ff0000' });
         scoreText.fixedToCamera = true;
     },
 
@@ -154,7 +151,7 @@ var playState = {
         }
 
         function died() {
-            diedText = game.add.text(150, 200, 'YOU DIED', { fontSize: '150px', fill: '#ff0000' });
+            diedText = game.add.text(120, 200, 'YOU DIED', { fontSize: '250px', font: "Creepster", fill: '#ff0000' });
             diedText.fixedToCamera = true;
             player.kill();
             setTimeout(function() {
