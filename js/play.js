@@ -4,6 +4,9 @@ var scoreText;
 var score = 0;
 var platforms;
 var facing = "right";
+var enemies;
+var enemy;
+var diedText;
 
 var playState = {
 
@@ -16,6 +19,8 @@ var playState = {
         game.load.image("arrowSign", "assets/ArrowSign.png");
         game.load.image("grave1", "assets/TombStone_1.png");
         game.load.image("tree", "assets/Tree.png");
+        game.load.image("crate", "assets/Crate.png");
+        game.load.spritesheet("enemy", "assets/knight_anim.png", 203, 329);
     },
 
     create: function() {
@@ -101,7 +106,7 @@ var playState = {
 
 
 
-        // brain 
+        // brains s
         brains = game.add.group();
         brains.enableBody = true;
 
@@ -111,14 +116,29 @@ var playState = {
             brain.body.bounce.y = 0.2 + Math.random() * 0.2;
         }
 
+        // crates
+        crates = game.add.group();
+        crates.enableBody = true;
+
+        var crate = crates.create(1300, game.world.height - 156, "crate");
+        crate.body.immovable = true;
+
         //tombstone1 
         tombstone1 = game.add.group();
         tombstone1.enableBody = true;
         for (var i = 1; i < 20; i++) {
             var tombstone = tombstone1.create(i * 1000, game.world.height - 132, "grave1");
-            tombstone.body.gravity.y = 100;
+            tombstone.body.gravity.y = 1000;
             tombstone.scale.setTo(1.5, 1.5);
         }
+
+        // enemy 
+        enemies = game.add.group();
+        enemies.enableBody = true;
+        enemy = enemies.create(1100, game.world.height - 191, "enemy");
+        enemy.scale.setTo(0.43, 0.43);
+        enemy.animations.add('left', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 10, true);
+        // enemy.body.immovable = true;
 
         cursors = game.input.keyboard.createCursorKeys();
         space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -133,19 +153,27 @@ var playState = {
             scoreText.text = 'Brains eaten: ' + score;
         }
 
-        function restart() {
+        function died() {
+            diedText = game.add.text(150, 200, 'YOU DIED', { fontSize: '150px', fill: '#ff0000' });
+            diedText.fixedToCamera = true;
+            player.kill();
             setTimeout(function() {
                 game.state.start("play")
                 score = 0;
-            }, 1000)
+            }, 2000)
         }
 
         var hitPlatform = game.physics.arcade.collide(player, platforms);
+        var hitCrate = game.physics.arcade.collide(player, crates);
         game.physics.arcade.collide(brains, platforms);
         game.physics.arcade.collide(tombstone1, platforms);
+        game.physics.arcade.collide(player, crates);
         game.physics.arcade.overlap(player, brains, collectbrain, null, this);
-        game.physics.arcade.overlap(player, lavaGround, restart, null, this)
+        game.physics.arcade.overlap(player, lavaGround, died, null, this)
+        game.physics.arcade.overlap(player, enemies, died, null, this)
         player.body.velocity.x = 0;
+        enemy.body.velocity.x = -150;
+        enemy.animations.play("left")
 
         if (cursors.left.isDown) {
             player.body.velocity.x = -350;
@@ -172,7 +200,8 @@ var playState = {
             }
         }
 
-        if (space.isDown && player.body.touching.down && hitPlatform) {
+        if (space.isDown && player.body.touching.down && hitPlatform ||
+            space.isDown && player.body.touching.down && hitCrate) {
             player.body.velocity.y = -370;
         }
         if (!player.body.touching.down && !player.body.velocity.y == 0 && !hitPlatform) {
