@@ -12,7 +12,7 @@ var playState = {
         game.load.image("ground", "assets/newGround.png");
         game.load.image("sky", "assets/background.png");
         game.load.image("brain", "assets/brain.png");
-        game.load.image("lava", "assets/lava.png");
+        game.load.image("lava", "assets/lava_new.png");
         game.load.image("arrowSign", "assets/ArrowSign.png")
         game.load.image("grave1", "assets/TombStone_1.png")
     },
