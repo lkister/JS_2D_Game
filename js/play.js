@@ -21,12 +21,14 @@ var playState = {
         game.load.image("tree", "assets/Tree.png");
         game.load.image("crate", "assets/Crate.png");
         game.load.spritesheet("enemy", "assets/knight_anim.png", 203, 329);
+        game.load.image("bullet", "assets/bullet.png");
     },
 
     create: function() {
-        // fizyka
+        // physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        // niebo
+
+        // background
         background = game.add.tileSprite(0, 0, 1000, 600, 'sky');
         game.world.setBounds(0, 0, 8000, 600);
         game.camera.follow(background);
@@ -35,7 +37,7 @@ var playState = {
         //arrow sign 
         arrow = game.add.sprite(150, game.world.height - 135, "arrowSign");
 
-        // tree
+        // trees
         tree = game.add.sprite(550, 195, "tree");
         tree.scale.setTo(1.5, 1.5);
         tree = game.add.sprite(2000, 195, "tree");
@@ -45,29 +47,26 @@ var playState = {
         tree = game.add.sprite(4200, 195, "tree");
         tree.scale.setTo(1.5, 1.5);
 
-        // zombiak
+        // player
         player = game.add.sprite(30, 410, 'player');
         player.frame = 5;
         player.scale.setTo(0.5, 0.5);
         game.physics.arcade.enable(player);
-        // player.body.bounce.y = 0.5;
         player.body.gravity.y = 360;
         player.body.collideWorldBounds = true;
         player.animations.add('left', [0, 1, 2, 3], 10, true);
         player.animations.add('right', [6, 7, 8, 9], 10, true);
         game.camera.follow(player);
 
-        // ziemia
+        // ground
         platforms = game.add.group();
         platforms.enableBody = true;
         var ground = platforms.create(0, game.world.height - 50, 'ground');
         ground.body.immovable = true;
         ground.scale.setTo(16, 1);
-
         ground = platforms.create(1900, game.world.height - 50, 'ground');
         ground.body.immovable = true;
         ground.scale.setTo(8, 1);
-
         ground = platforms.create(3500, game.world.height - 50, 'ground');
         ground.body.immovable = true;
         ground.scale.setTo(12, 1);
@@ -87,7 +86,6 @@ var playState = {
         ledge = platforms.create(1800, 220, 'ground');
         ledge.scale.setTo(3, 0.51);
         ledge.body.immovable = true;
-
         // platform 5
         ledge = platforms.create(2900, 380, 'ground');
         ledge.scale.setTo(1, 0.5);
@@ -99,15 +97,13 @@ var playState = {
         var lava = lavaGround.create(1600, game.world.height - 40, "lava");
         lava.body.immovable = true;
         lava.scale.setTo(3, 1);
-
         lava = lavaGround.create(2700, game.world.height - 40, "lava");
         lava.body.immovable = true;
         lava.scale.setTo(8, 1);
 
-        // brains s
+        // braaaainsss
         brains = game.add.group();
         brains.enableBody = true;
-
         for (var i = 0; i < 50; i++) {
             var brain = brains.create(i * 200 + 50, 0, 'brain');
             brain.body.gravity.y = 260;
@@ -117,7 +113,6 @@ var playState = {
         // crates
         crates = game.add.group();
         crates.enableBody = true;
-
         var crate = crates.create(1300, game.world.height - 156, "crate");
         crate.body.immovable = true;
 
@@ -137,11 +132,28 @@ var playState = {
         enemy.scale.setTo(0.43, 0.43);
         enemy.animations.add('left', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 10, true);
 
+        // input
         cursors = game.input.keyboard.createCursorKeys();
         space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+        // score info
         scoreText = game.add.text(16, 16, 'Brains eaten: 0', { fontSize: '30px', font: "Creepster", fill: '#ff0000' });
         scoreText.fixedToCamera = true;
+
+        // fullscreen
+        game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+        game.input.onDown.add(gofull);
+
+        function gofull() {
+            if (game.scale.isFullScreen) {
+                game.scale.stopFullScreen();
+            } else {
+                game.scale.startFullScreen(false);
+            }
+        }
     },
+
+
 
     update: function() {
         function collectbrain(player, brain) {
@@ -159,6 +171,7 @@ var playState = {
                 score = 0;
             }, 2000)
         }
+        // game.debug.spriteInfo(player, 632, 32);
 
         var hitPlatform = game.physics.arcade.collide(player, platforms);
         var hitCrate = game.physics.arcade.collide(player, crates);
