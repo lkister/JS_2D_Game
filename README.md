@@ -6,6 +6,13 @@ Technologies used:
 2. Phaser 
 3. Webpack
 
-How to play:
-Use keyboard arrows lefto and rigth to move.
-Press SPACE key to jump.
+Developing in progress. Game doesn't work on mobile.  
+
+### How to play:  
+Use keyboard arrows lefto and rigth to move.  
+Press SPACE key to jump.  
+Click on screen to go Fullscreen  
+
+
+
+
