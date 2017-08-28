@@ -7,6 +7,7 @@ var facing = "right";
 var enemies;
 var enemy;
 var diedText;
+var bullets;
 
 var playState = {
 
@@ -57,6 +58,11 @@ var playState = {
         player.animations.add('left', [0, 1, 2, 3], 10, true);
         player.animations.add('right', [6, 7, 8, 9], 10, true);
         game.camera.follow(player);
+
+        // bullets 
+        bullets = game.add.group();
+        bullets.enableBody = true;
+        bullets.createMultiple(5, 'bullet');
 
         // ground
         platforms = game.add.group();
@@ -153,8 +159,6 @@ var playState = {
         }
     },
 
-
-
     update: function() {
         function collectbrain(player, brain) {
             brain.kill();
@@ -217,6 +221,5 @@ var playState = {
         if (!player.body.touching.down && !player.body.velocity.y == 0 && !hitPlatform) {
             player.animations.stop();
         }
-
     }
 };
