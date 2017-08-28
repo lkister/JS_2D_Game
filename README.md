@@ -1,5 +1,5 @@
 # JS_2D_Game
-## [Click here for live preview](https://lkister.github.io/JS_2D_Game/index.html) 
+## [Click here for live preview](https://lkister.github.io/game_JS_2D_platformer/index.html) 
 ### Developing in progress. Game doesn't work on mobile.
 
 2D platformer game using Phaser Framework.  
